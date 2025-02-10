@@ -5,6 +5,7 @@ on:
       - 'main'
 jobs:
   build:
+    environment: main
     name: 'Build and Push to ACR'
     runs-on: ubuntu-latest
 
