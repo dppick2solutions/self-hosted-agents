@@ -33,5 +33,5 @@ jobs:
             AZP_AGENT_NAME: 'Docker Agent - Linux'
         with:
           push: true
-          tags: ${{ secrets.IMAGE_TAG }}
+          tags: 'self-hosted-agent'
           file: Dockerfile
