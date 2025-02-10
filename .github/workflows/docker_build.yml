@@ -1,0 +1,36 @@
+name: Build and Push to ACR
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  build:
+    name: 'Build and Push to ACR'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./container
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ vars.ACR_URL }}
+          username: ${{ vars.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Push to ACR
+        uses: docker/build-push-action@v2
+        env:
+            AZP_URL: ${{ vars.AZP_URL }}
+            AZP_TOKEN: ${{ secrets.AZP_TOKEN }}
+            AZP_POOL: 'Self-Hosted Pool'
+            AZP_AGENT_NAME: 'Docker Agent - Linux'
+        with:
+          push: true
+          tags: ${{ secrets.IMAGE_TAG }}
+          file: Dockerfile
