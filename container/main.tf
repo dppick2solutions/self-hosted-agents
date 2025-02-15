@@ -28,8 +28,8 @@ resource "azurerm_container_app" "default" {
     container {
       name   = "agent"
       image  = "${var.image_name}:v1"
-      cpu    = 2
-      memory = "8Gi"
+      cpu    = 2.0
+      memory = "4Gi"
     }
   }
 }
