@@ -11,7 +11,7 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 WORKDIR /azp/
 
-COPY start.sh ./
+COPY ./container/start.sh ./
 RUN chmod +x ./start.sh
 
 # Create agent user and set up home directory
