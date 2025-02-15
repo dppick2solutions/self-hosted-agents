@@ -18,18 +18,18 @@ resource "azurerm_container_app_environment" "default" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.default.id
 }
 
-resource "azurerm_container_app" "example" {
-  name                         = "example-app"
-  container_app_environment_id = azurerm_container_app_environment.example.id
-  resource_group_name          = azurerm_resource_group.example.name
+resource "azurerm_container_app" "default" {
+  name                         = "ado-self-hosted-agent"
+  container_app_environment_id = azurerm_container_app_environment.default.id
+  resource_group_name          = azurerm_resource_group.default.name
   revision_mode                = "Single"
 
   template {
     container {
-      name   = "examplecontainerapp"
-      image  = "mcr.microsoft.com/k8se/quickstart:latest"
-      cpu    = 0.25
-      memory = "0.5Gi"
+      name   = "agent"
+      image  = "${var.image_name}:v1"
+      cpu    = 2
+      memory = "8Gi"
     }
   }
 }

@@ -1,20 +1,22 @@
-name: Deploy ACR Infrastructure
+name: Deploy Containers
 
 on:
-    push:
-        branches: 
-            - main
-        
+    workflow_run:
+        workflows: ["Build and Push to ACR"]
+        types:
+          - completed
+    workflow_dispatch: 
+
 permissions: write-all
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        environment: main
-        defaults:
-            run:
-                working-directory: ./registry
-        steps:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: main
+    defaults:
+      run:
+        working-directory: ./container
+    steps:
             - name: Checkout
               uses: actions/checkout@v4
 
@@ -44,6 +46,7 @@ jobs:
                 ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
                 TF_VAR_azure_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
                 TF_VAR_azure_client_id: ${{ vars.ARM_CLIENT_ID }}
+                TF_VAR_image_name: ${{ vars.IMAGE_NAME }}
               run: terraform plan
 
             - name: Approve Terraform Plan
@@ -59,4 +62,5 @@ jobs:
                 ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
                 TF_VAR_azure_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
                 TF_VAR_azure_client_id: ${{ vars.ARM_CLIENT_ID }}
+                TF_VAR_image_name: ${{ vars.IMAGE_NAME }}
               run: terraform apply -auto-approve
