@@ -41,6 +41,11 @@ resource "azurerm_container_app" "app" {
     identity_ids = [ azurerm_user_assigned_identity.container.id ]
   }
 
+  registry {
+    server = data.azurerm_container_registry.acr.login_server
+    identity = azurerm_user_assigned_identity.container.id
+  }
+
   template {
     container {
       name   = "agent"
