@@ -52,7 +52,18 @@ resource "azurerm_container_app" "app" {
       image  = "${var.image_name}:v1"
       cpu    = 2.0
       memory = "4Gi"
+      env {
+        name = "AZP_URL"
+        value = var.azure_devops_url
+      }
+      env {
+        name = "AZP_TOKEN"
+        value = var.azure_devops_personal_access_token
+      }
     }
   }
+
+  
+
   depends_on = [ azurerm_role_assignment.container_registry_reader ]
 }
