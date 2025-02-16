@@ -9,6 +9,13 @@ RUN apt update && \
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
+# Install Node.js and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+  apt install -y nodejs
+
+# Install terraform-visual
+RUN npm install -g @terraform-visual/cli
+
 WORKDIR /azp/
 
 COPY ./container/start.sh ./

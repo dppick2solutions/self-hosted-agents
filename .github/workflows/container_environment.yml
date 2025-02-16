@@ -1,10 +1,6 @@
-name: Deploy Containers
+name: Deploy Container
 
 on:
-    workflow_run:
-        workflows: ["Build and Push to ACR"]
-        types:
-          - completed
     workflow_dispatch: 
 
 permissions: write-all
