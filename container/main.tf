@@ -11,18 +11,35 @@ resource "azurerm_log_analytics_workspace" "default" {
   retention_in_days   = 30
 }
 
-resource "azurerm_container_app_environment" "default" {
+resource "azurerm_user_assigned_identity" "container" {
+  location            = azurerm_resource_group.default.location
+  name                = "self-hosted-container-identity"
+  resource_group_name = azurerm_resource_group.default.name
+}
+
+resource "azurerm_role_assignment" "container_registry_reader" {
+  scope = data.azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id = azurerm_user_assigned_identity.container.principal_id
+}
+
+resource "azurerm_container_app_environment" "environment" {
   name                       = "pick2-container-environment"
   location                   = azurerm_resource_group.default.location
   resource_group_name        = azurerm_resource_group.default.name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.default.id
 }
 
-resource "azurerm_container_app" "default" {
+resource "azurerm_container_app" "app" {
   name                         = "ado-self-hosted-agent"
-  container_app_environment_id = azurerm_container_app_environment.default.id
+  container_app_environment_id = azurerm_container_app_environment.environment.id
   resource_group_name          = azurerm_resource_group.default.name
   revision_mode                = "Single"
+
+  identity {
+    type = "UserAssigned"
+    identity_ids = [ azurerm_user_assigned_identity.container.id ]
+  }
 
   template {
     container {
@@ -32,4 +49,5 @@ resource "azurerm_container_app" "default" {
       memory = "4Gi"
     }
   }
+  depends_on = [ azurerm_role_assignment.container_registry_reader ]
 }
