@@ -10,7 +10,7 @@ RUN apt update && \
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # Install Node.js and npm
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash - && \
   apt install -y nodejs
 
 # Install terraform-visual
