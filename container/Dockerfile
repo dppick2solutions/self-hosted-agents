@@ -1,8 +1,7 @@
 FROM ubuntu:22.04
 
 ENV TARGETARCH="linux-x64" \
-    TERRAFORM_VERSION="1.10.5" \
-    NODE_VERSION="20.x" \
+    TERRAFORM_VERSION="1.6.6" \
     AGENT_HOME="/home/agent"
 
 # Set non-interactive mode to avoid prompts during package installation
@@ -15,16 +14,13 @@ RUN apt update && \
       git \
       jq \
       libicu70 \
-      unzip && \
+      unzip \
+      nodejs \
+      npm && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-
-# Install Node.js and npm (LTS version for better compatibility)
-RUN curl -fsSL "https://deb.nodesource.com/setup_${NODE_VERSION}" | bash - && \
-    apt install -y --no-install-recommends nodejs && \
-    rm -rf /var/lib/apt/lists/*
 
 # Install terraform-visual
 RUN npm install -g @terraform-visual/cli
