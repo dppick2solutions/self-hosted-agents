@@ -36,6 +36,10 @@ resource "azurerm_container_app_environment" "environment" {
   location                   = azurerm_resource_group.default.location
   resource_group_name        = azurerm_resource_group.default.name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.default.id
+  workload_profile {
+    name = "ConsumptionWorkload"
+    workload_profile_type = "Consumption"
+  }
 }
 
 resource "azurerm_container_app" "app" {
@@ -43,6 +47,7 @@ resource "azurerm_container_app" "app" {
   container_app_environment_id = azurerm_container_app_environment.environment.id
   resource_group_name          = azurerm_resource_group.default.name
   revision_mode                = "Single"
+  workload_profile_name        = "ConsumptionWorkload"
 
   identity {
     type = "UserAssigned"
