@@ -11,14 +11,6 @@ resource "azurerm_log_analytics_workspace" "default" {
   retention_in_days   = 30
 }
 
-resource "azurerm_storage_account" "terraform_visuals" {
-  name = "pick2terraformvisuals"
-  resource_group_name = azurerm_resource_group.default.name
-  location = azurerm_resource_group.default.location
-  account_tier             = "Standard"
-  account_replication_type = "GRS"
-}
-
 resource "azurerm_user_assigned_identity" "container" {
   location            = azurerm_resource_group.default.location
   name                = "self-hosted-container-identity"
